@@ -11,9 +11,56 @@ GSI_CONFIG = {
     'max_retries': 3
 }
 
-# Area of Interest Examples (West, South, East, North in WGS84)
-# Format: (west_longitude, south_latitude, east_longitude, north_latitude)
+# ============================================================================
+# QUICK LOCATION SELECTOR - Change just this one number!
+# ============================================================================
+SELECTED_LOCATION = 1  # <-- CHANGE THIS NUMBER (1-19) to select location
 
+# Location List (numbered for easy selection)
+LOCATION_LIST = [
+    # Japan - Yokohama (GSI Seamless Photo, very high resolution ~10cm/pixel)
+    ('yokohama_station', (139.615, 35.461, 139.628, 35.471)),           # 1
+    ('yokohama_park', (139.628, 35.443, 139.643, 35.454)),              # 2
+    ('minato_mirai', (139.625, 35.451, 139.645, 35.465)),               # 3
+    ('yamashita_park', (139.645, 35.442, 139.655, 35.448)),             # 4
+
+    # Netherlands - Amsterdam (requires satellite imagery API)
+    ('amsterdam_vondelpark', (4.860, 52.357, 4.875, 52.365)),           # 5
+    ('amsterdam_center', (4.885, 52.368, 4.900, 52.378)),               # 6
+    ('amsterdam_westerpark', (4.870, 52.380, 4.885, 52.390)),           # 7
+    ('amsterdam_oost', (4.920, 52.355, 4.935, 52.365)),                 # 8
+    ('amsterdam_jordaan', (4.875, 52.370, 4.890, 52.380)),              # 9
+
+    # USA - New York City (requires satellite imagery API)
+    ('nyc_central_park_south', (-73.980, 40.765, -73.965, 40.775)),     # 10
+    ('nyc_central_park_north', (-73.970, 40.780, -73.955, 40.790)),     # 11
+    ('nyc_brooklyn_prospect', (-73.975, 40.655, -73.960, 40.665)),      # 12
+
+    # UK - London (requires satellite imagery API)
+    ('london_hyde_park', (-0.175, 51.503, -0.160, 51.513)),             # 13
+    ('london_regents_park', (-0.160, 51.525, -0.145, 51.535)),          # 14
+    ('london_greenwich_park', (-0.005, 51.475, 0.010, 51.485)),         # 15
+
+    # Germany - Berlin (requires satellite imagery API)
+    ('berlin_tiergarten', (13.355, 52.510, 13.370, 52.520)),            # 16
+    ('berlin_tempelhofer_feld', (13.390, 52.470, 13.410, 52.485)),      # 17
+
+    # France - Paris (requires satellite imagery API)
+    ('paris_luxembourg_gardens', (2.330, 48.843, 2.345, 48.853)),       # 18
+    ('paris_tuileries', (2.320, 48.860, 2.335, 48.868)),                # 19
+]
+
+# Helper function to get selected location
+def get_selected_location():
+    """Get the currently selected location based on SELECTED_LOCATION number"""
+    if 1 <= SELECTED_LOCATION <= len(LOCATION_LIST):
+        name, bbox = LOCATION_LIST[SELECTED_LOCATION - 1]
+        return name, bbox
+    else:
+        raise ValueError(f"SELECTED_LOCATION must be between 1 and {len(LOCATION_LIST)}")
+
+# Area of Interest Dictionary (for backward compatibility)
+# Format: (west_longitude, south_latitude, east_longitude, north_latitude)
 AREAS = {
     # Japan - Yokohama (GSI Seamless Photo available, very high resolution ~10cm/pixel)
     'yokohama_station': (139.615, 35.461, 139.628, 35.471),

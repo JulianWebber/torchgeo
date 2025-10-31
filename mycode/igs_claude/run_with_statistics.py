@@ -20,7 +20,7 @@ from greenspace_statistics import (
     export_metrics_to_csv,
     export_summary_report
 )
-from config import AREAS, TRAINING_CONFIG
+from config import get_selected_location, TRAINING_CONFIG
 
 
 def main():
@@ -30,10 +30,9 @@ def main():
     print("=" * 80)
     print()
 
-    # Configuration
-    # You can change this to any area from config.AREAS or define custom bbox
-    area_name = 'yokohama_station'
-    bbox = AREAS[area_name]
+    # Configuration - automatically uses SELECTED_LOCATION from config.py
+    # To change location, just change SELECTED_LOCATION number in config.py!
+    area_name, bbox = get_selected_location()
 
     # Or use custom bbox: (west, south, east, north)
     # bbox = (139.615, 35.461, 139.628, 35.471)
