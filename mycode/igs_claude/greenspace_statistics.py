@@ -327,7 +327,7 @@ class GreenspaceStatistics:
 def export_metrics_to_csv(
     metrics: Dict[str, any],
     output_path: str = "output/greenspace_statistics.csv",
-    append_mode: bool = False
+    format: str = "vertical"
 ):
     """
     Export metrics to CSV file suitable for journal publications
@@ -335,32 +335,65 @@ def export_metrics_to_csv(
     Args:
         metrics: Dictionary of metrics from calculate_all_metrics()
         output_path: Path to output CSV file
-        append_mode: If True, append to existing file
+        format: "vertical" (metric, value, category) or "horizontal" (one row with all columns)
     """
     import os
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    # Flatten nested dictionary
-    flattened = {}
+    if format == "vertical":
+        # Write in vertical format: Category, Metric, Value
+        rows = []
 
-    for category, values in metrics.items():
-        if isinstance(values, dict):
-            for key, value in values.items():
-                flattened[f"{category}_{key}"] = value
-        else:
-            flattened[category] = values
+        for category, values in metrics.items():
+            if isinstance(values, dict):
+                for key, value in values.items():
+                    # Format value appropriately
+                    if isinstance(value, float):
+                        formatted_value = f"{value:.4f}"
+                    elif isinstance(value, int):
+                        formatted_value = str(value)
+                    else:
+                        formatted_value = str(value)
 
-    # Write to CSV
-    mode = 'a' if append_mode and os.path.exists(output_path) else 'w'
-    file_exists = os.path.exists(output_path) and append_mode
+                    rows.append({
+                        'Category': category.replace('_', ' ').title(),
+                        'Metric': key.replace('_', ' ').title(),
+                        'Value': formatted_value,
+                        'Full_Metric_Name': f"{category}_{key}"
+                    })
+            else:
+                # Handle non-dict values (like simple metadata)
+                formatted_value = str(values)
+                rows.append({
+                    'Category': category.replace('_', ' ').title(),
+                    'Metric': category.replace('_', ' ').title(),
+                    'Value': formatted_value,
+                    'Full_Metric_Name': category
+                })
 
-    with open(output_path, mode, newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=flattened.keys())
-
-        if not file_exists:
+        # Write to CSV
+        with open(output_path, 'w', newline='') as csvfile:
+            fieldnames = ['Category', 'Metric', 'Value', 'Full_Metric_Name']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
+            writer.writerows(rows)
 
-        writer.writerow(flattened)
+    else:  # horizontal format
+        # Flatten nested dictionary
+        flattened = {}
+
+        for category, values in metrics.items():
+            if isinstance(values, dict):
+                for key, value in values.items():
+                    flattened[f"{category}_{key}"] = value
+            else:
+                flattened[category] = values
+
+        # Write to CSV
+        with open(output_path, 'w', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=flattened.keys())
+            writer.writeheader()
+            writer.writerow(flattened)
 
     print(f"\nStatistics exported to: {output_path}")
     return output_path
