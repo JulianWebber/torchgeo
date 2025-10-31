@@ -1,0 +1,31 @@
+# Model weights (too large for GitHub)
+*.pth
+*.ckpt
+
+# Tile cache and downloads
+gsi_cache/
+gsi_tiles/
+gsi_tiles1/
+
+# Output files
+output/
+*.png
+*.jpg
+*.tif
+*.tiff
+*.geojson
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# Large documentation (if needed, store separately)
+docs/
+
+# Environment files
+.env

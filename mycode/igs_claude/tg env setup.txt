@@ -1,0 +1,27 @@
+
+use github local clone of torchgeo
+then open folder
+
+conda create -n tg2 python=3.11
+conda activate tg2 
+pip install .
+pip install 'torchgeo[datasets]'
+pip install 'torchgeo[style,tests]'
+pip install 'torchgeo[all]'
+
+
+https://github.com/JulianWebber/torchgeo.git
+conda env remove -n <environment_name> --all
+
+git status
+git add .
+git commit -m "update"
+git push
+
+git push origin main
+git pull origin main
+
+
+
+
+

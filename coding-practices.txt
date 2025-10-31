@@ -1,0 +1,1 @@
+i want to run the code on cloud gpu vast.ai.  it is recommended to save the work periodically to disk in case processes are killed etc. upload checkpoints to external storage regularly. implement checkpointing to resume code from saved states. please add this with clear documentation to the code.
